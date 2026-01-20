@@ -334,3 +334,193 @@ body {
     animation: fadeIn 0.5s ease-out;
 }
 
+/* Article Modal */
+.article-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 2rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    max-width: 900px;
+    margin: 2rem auto;
+    background: var(--bg-white);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.modal-close:hover {
+    background: var(--bg-light);
+    color: var(--text-primary);
+}
+
+.article-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.article-header .article-title {
+    font-size: 2rem;
+    margin: 1rem 0;
+}
+
+.article-body {
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 1.05rem;
+}
+
+.article-body h1 {
+    font-size: 2rem;
+    margin: 2rem 0 1rem;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.article-body h2 {
+    font-size: 1.75rem;
+    margin: 1.5rem 0 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.article-body h3 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 0.75rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.article-body p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+}
+
+.article-body ul {
+    margin: 1rem 0;
+    padding-left: 2rem;
+}
+
+.article-body li {
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.article-body code {
+    background: var(--bg-light);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--primary-color);
+}
+
+.article-body pre {
+    background: var(--bg-light);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.article-body pre code {
+    background: none;
+    padding: 0;
+    color: var(--text-primary);
+}
+
+.article-body blockquote {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body a {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px solid var(--primary-color);
+    transition: all 0.3s;
+}
+
+.article-body a:hover {
+    color: var(--primary-dark);
+    border-bottom-color: var(--primary-dark);
+}
+
+.article-body strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.article-body .math-block {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+    text-align: center;
+    overflow-x: auto;
+    font-family: 'Times New Roman', serif;
+}
+
+.article-body .math-inline {
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .article-modal {
+        padding: 1rem;
+    }
+    
+    .modal-content {
+        padding: 1.5rem;
+        margin: 1rem auto;
+    }
+    
+    .article-header .article-title {
+        font-size: 1.5rem;
+    }
+    
+    .article-body h1 {
+        font-size: 1.5rem;
+    }
+    
+    .article-body h2 {
+        font-size: 1.25rem;
+    }
+    
+    .article-body h3 {
+        font-size: 1.1rem;
+    }
+}
+
