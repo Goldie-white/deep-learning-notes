@@ -114,11 +114,29 @@ const categoryLabels = {
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Articles loaded:', articles.length);
-    console.log('Articles:', articles);
-    renderArticles('all');
-    setupFilterButtons();
-    setupNavigation();
+    try {
+        console.log('Articles loaded:', articles ? articles.length : 0);
+        console.log('Articles:', articles);
+        
+        if (!articles || articles.length === 0) {
+            console.error('No articles found!');
+            const grid = document.getElementById('articlesGrid');
+            if (grid) {
+                grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 3rem 0;">No articles available.</p>';
+            }
+            return;
+        }
+        
+        renderArticles('all');
+        setupFilterButtons();
+        setupNavigation();
+    } catch (error) {
+        console.error('Error initializing page:', error);
+        const grid = document.getElementById('articlesGrid');
+        if (grid) {
+            grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 3rem 0;">Error loading articles. Please refresh the page.</p>';
+        }
+    }
 });
 
 // Render articles
