@@ -114,6 +114,8 @@ const categoryLabels = {
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Articles loaded:', articles.length);
+    console.log('Articles:', articles);
     initializeStats();
     renderArticles('all');
     setupFilterButtons();
@@ -161,9 +163,16 @@ function calculateLearningDays() {
 // Render articles
 function renderArticles(filter) {
     const grid = document.getElementById('articlesGrid');
+    if (!grid) {
+        console.error('articlesGrid element not found!');
+        return;
+    }
+    
     const filteredArticles = filter === 'all' 
         ? articles 
         : articles.filter(a => a.category === filter);
+    
+    console.log('Filter:', filter, 'Filtered articles:', filteredArticles.length);
     
     if (filteredArticles.length === 0) {
         grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1 / -1;">No articles found</p>';
@@ -181,6 +190,8 @@ function renderArticles(filter) {
             </div>
         </div>
     `).join('');
+    
+    console.log('Articles rendered:', filteredArticles.length);
 }
 
 // Format date
