@@ -114,29 +114,33 @@ const categoryLabels = {
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
-    try {
-        console.log('Articles loaded:', articles ? articles.length : 0);
-        console.log('Articles:', articles);
-        
-        if (!articles || articles.length === 0) {
-            console.error('No articles found!');
-            const grid = document.getElementById('articlesGrid');
-            if (grid) {
-                grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 3rem 0;">No articles available.</p>';
-            }
-            return;
-        }
-        
-        renderArticles('all');
-        setupFilterButtons();
-        setupNavigation();
-    } catch (error) {
-        console.error('Error initializing page:', error);
+    console.log('Page loaded');
+    console.log('Articles variable exists:', typeof articles !== 'undefined');
+    console.log('Articles loaded:', typeof articles !== 'undefined' ? articles.length : 0);
+    
+    if (typeof articles === 'undefined') {
+        console.error('Articles array is undefined!');
         const grid = document.getElementById('articlesGrid');
         if (grid) {
-            grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 3rem 0;">Error loading articles. Please refresh the page.</p>';
+            grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 3rem 0;">Error: Articles data not loaded. Please check the console.</p>';
         }
+        return;
     }
+    
+    if (!articles || articles.length === 0) {
+        console.error('No articles found! Articles array:', articles);
+        const grid = document.getElementById('articlesGrid');
+        if (grid) {
+            grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 3rem 0;">No articles available.</p>';
+        }
+        return;
+    }
+    
+    console.log('Rendering articles...');
+    renderArticles('all');
+    setupFilterButtons();
+    setupNavigation();
+    console.log('Initialization complete');
 });
 
 // Render articles

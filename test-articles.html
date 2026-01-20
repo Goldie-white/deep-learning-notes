@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Articles</title>
+</head>
+<body>
+    <h1>Articles Test</h1>
+    <div id="test"></div>
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('test').innerHTML = 
+            '<p>Articles count: ' + (articles ? articles.length : 'undefined') + '</p>' +
+            '<p>First article title: ' + (articles && articles[0] ? articles[0].title : 'not found') + '</p>';
+        console.log('Articles:', articles);
+    </script>
+</body>
+</html>
+
