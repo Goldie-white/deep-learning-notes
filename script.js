@@ -2,83 +2,83 @@
 const articles = [
     {
         id: 1,
-        title: "ResNet: Deep Residual Learning for Image Recognition",
-        excerpt: "Residual Network (ResNet), proposed by Kaiming He et al. in 2015, introduces skip connections that allow networks to learn residual mappings, enabling deeper networks while maintaining trainability.",
+        title: "ResNet",
+        excerpt: "残差网络（Residual Network，简称 ResNet）是由 Kaiming He 等人在 2015 年提出的深度神经网络架构。它通过引入"跳跃连接"（Skip Connection），允许网络学习残差映射，从而让网络在变深的同时保持可训练性。",
         category: "architecture",
         date: "2024-01-20",
-        readTime: "15 min",
-        content: `# ResNet: Deep Residual Learning for Image Recognition
+        readTime: "15分钟",
+        content: `# ResNet
 
-Residual Network (ResNet), proposed by Kaiming He et al. in 2015, is a deep neural network architecture that introduces skip connections (also called shortcut connections) to allow networks to learn residual mappings, enabling networks to maintain trainability while becoming deeper.
+残差网络（Residual Network，简称 ResNet）是由 Kaiming He 等人在 2015 年提出的深度神经网络架构. 它通过引入"跳跃连接"（Skip Connection）或"快捷连接"（Shortcut Connection），允许网络学习残差映射，从而让网络**在变深的同时保持可训练性**. 
 
-> He, K., Zhang, X., Ren, S., & Sun, J. (2015). Deep residual learning for image recognition. *arXiv preprint arXiv:1512.03385*. https://arxiv.org/pdf/1512.03385
+> Deep Residual Learning for Image Recognition, https://arxiv.org/pdf/1512.03385
 
-## Motivation: The Degradation Problem
+### 动机：深度的诅咒——退化问题 (The Degradation Problem)
 
-Before ResNet, it was theoretically believed that deeper networks should have stronger representational power. However, experiments revealed that as network depth increased (e.g., from 20 to 56 layers), training error actually increased.
+在 ResNet 提出之前，理论上认为越深的网络应该具有越强的表达能力. 然而实验发现，随着网络层数增加（例如从 20 层增加到 56 层），训练误差反而上升了. 
 
-Suppose we have a shallow network A (e.g., 20 layers) that has achieved good performance. We then construct a deeper network B (e.g., 56 layers) by copying A's architecture and adding 36 more layers.
+假设我们有一个浅层网络 A（比如 20 层），它已经达到了很好的性能. 现在我们构建一个更深的网络 B（比如 56 层），把 A 的网络架构复制过来，然后再在后面加上 36 个层. 
 
- * **Theoretically**: Network B should perform at least as well as network A (since it can completely contain A's solution).
- * **Actually**: The deeper network B achieves much higher error than A.
+ * 理论上：网络 B 的性能至少应该等于网络 A（因为它可以完全包含 A 的解）. 
+ * 实际上：普通的深层网络 B 训练出来的误差远高于 A. 
 
-This is not overfitting, as overfitting typically manifests as low training error but high test error. In the degradation problem, deeper networks have higher training error than shallow networks. This indicates that deep networks face severe **optimization difficulties**—they cannot even learn to replicate shallow network performance. 
+这不是过拟合（Overfitting），因为过拟合通常表现为训练误差低、测试误差高；而在退化问题中，深层网络的训练误差也比浅层网络高. 这说明深层网络遇到了严重的**优化困难 (Optimization Difficulty)**，它甚至无法学会复现浅层网络的表现. 
 
-## The Residual Block: The "Do No Harm" Principle
+### 残差块 (The Residual Block)：The "Do No Harm" Principle
 
-ResNet's solution is elegantly simple: it changes the learning objective from directly learning the target mapping $H(x)$ to learning the residual $F(x)$.
+ResNet 的解决方案极其简洁，它改变了网络学习的目标：不再让网络直接学习目标映射 $H(x)$，而是改为学习残差 $F(x)$. 
 
-Suppose we want the network layer to learn the target mapping $H(x)$.
+假设我们希望网络层学习的目标映射为 $H(x)$. 
 
-- **Plain networks**: Directly attempt to fit $H(x)$. This is equivalent to **each layer trying to reconstruct a complete feature representation from scratch**. This is acceptable in shallow networks, but in networks with hundreds of layers, requiring each layer to "start over" makes optimization extremely difficult and unstable.
+- 普通网络：直接尝试拟合 $H(x)$. 这相当于**每一层都试图重新构造一套特征表示**. 在浅层网络中，这尚可接受；但在上百层的网络中，要求每一层都"从头来过"，优化极其困难且不稳定. 
 
-- **ResNet**: Introduces skip connections that add the input $x$ directly to the output. The network only needs to learn the residual function $F(x) := H(x) - x$. Thus, the target mapping becomes:
+- ResNet：引入跳跃连接，将输入 $x$ 直接加到输出上. 网络实际上只需要学习残差函数 $F(x) := H(x) - x$. 因此，原目标映射变为：
   $$
   H(x) = F(x) + x
   $$
-  where $x$ is the input and $F(x)$ is the nonlinear transformation learned by the network layers. This is equivalent to **fine-tuning on top of features extracted by earlier layers**.
+  其中 $x$ 是输入，$F(x)$ 是网络层学习到的非线性变换. 这相当于**在前面层提取出来的特征的基础上进行微调**. 
 
-The key insight of ResNet is that by setting $H(x) = F(x) + x$, we initialize the network (when weights are near zero) to the identity mapping. This provides a "baseline" performance for deep networks—the network will only learn the nonlinear transformation $F(x)$ if it actually reduces the loss; otherwise, it can at least degrade to the identity mapping, maintaining shallow network performance. This means that adding depth will not make the model worse (The "Do No Harm" Principle). 
+ResNet 的基本思想是：通过预设 $H(x) = F(x) + x$，我们将初始状态（当权重为 0 时）设定为恒等映射. 这为深层网络提供了一个"保底"性能——只有当非线性变换 $F(x)$ 确实能降低 Loss 时，网络才会去学习它；否则，它至少可以退化回恒等映射，保持浅层网络的性能. 这意味着，增加深度不会让模型变差（The "Do No Harm" Principle）. 
 
-### Why is ResNet Easier to Learn? Learning Identity Mappings is Much Harder than Zero Mappings
+#### 为什么 ResNet 学习比传统网络容易？本质上是网络学习恒等映射远比零映射困难
 
-At this point, readers might wonder: why does each layer need to "start over" constructing feature representations without residual connections? Why is it difficult to simply copy the previous layer's result and make slight modifications?
+到这里，也许读者还是会有疑问，为什么说不使用残差连接，每一层就要"从头来过"地去构造一套特征表示呢？直接去复制上一层的结果，然后稍作修改，这很难吗？
 
-Yes, for plain networks, this is difficult—they are not good at inheriting results from previous layers. **"Copying the previous layer's result and making slight modifications"** is exactly what ResNet makes easy—this is ResNet's **structural bias**.
+是的，对普通网络来说，这很难，以至于它们不擅长继承前面层的结果. **"直接去复制上一层的结果，然后稍作修改"**，这恰是 ResNet 才容易做到的事情，**是 ResNet 的 structural bias**. 
 
-Essentially, this is because **learning identity mappings is much harder than learning zero mappings**. This is not difficult to understand:
+本质上，这是因为**网络学习恒等映射远比零映射困难**. 这个道理不难想清楚：
 
-- If the optimal mapping is close to identity, in plain networks, due to the presence of nonlinear activation functions, weights must be precisely configured to approximate identity mapping;
-- In ResNet, we only need to push weights toward zero (i.e., let $F(x) \\to 0$) to easily achieve $H(x) \\to x$. **Learning zero mappings is much easier than learning identity mappings**.
+- 如果最优映射接近恒等映射，在普通网络中，由于非线性激活函数的存在，需要精确地将权重逼近某种特定配置以模拟恒等映射；
+- 而在 ResNet 中，只需将权重推向 0（即让 $F(x) \\to 0$），即可轻松实现 $H(x) \\to x$. **学习零映射的难度远低于恒等映射**. 
 
-Because ResNet has this **ability to easily inherit shallow results**, it effectively writes the identity mapping as a "baseline solution" directly into the network, preventing performance degradation as depth increases.
+正因为 ResNet 具有这种**容易继承浅层结果的能力**，相当于把恒等映射这个"保底解"直接写入了网络，使模型不至于因为层数加深而性能退化. 
 
-In summary: in plain deep networks, **inheriting and fine-tuning existing features is highly unstable in optimization**, while ResNet makes this inheritance structurally feasible through explicit identity pathways. 
+一句话总结：换言之，在普通深层网络中，**继承并微调已有特征在优化上是高度不稳定的**，而 ResNet 通过显式的恒等通路，使这种继承变得结构性可行. 
 
-## Why Does Residual Learning Work?
+### 为什么残差学习有效？
 
-### A. Baseline Mechanism
+#### A. "保底"机制
 
-This reason has been discussed in detail above. Since learning zero mappings is much easier than learning identity mappings, for ResNet, maintaining at least original performance after deepening the network is easy (the "baseline" mechanism), but this is difficult for plain networks.
+这个原因，其实前面已经有很详细的论述了. 由于神经网络学习零映射的难度远低于恒等映射，因此对于 ResNet 来说，加深网络以后至少保持原有的性能是很容易的（"保底"机制），但对普通网络来说却很难. 
 
-In extremely deep networks, we should not view each layer as a completely new feature extractor, but rather as progressive refinement of features. This is like sculpting:
+在极深的网络中，我们不应该把每一层看作是全新的特征提取器，而应看作是对特征的渐进式微调（Refinement）. 这就像雕刻：
 
-- **Plain networks**: Try to carve the final shape with each cut.
-- **ResNet**: Start with a rough outline ($x$), then each cut only refines previous work ($F(x)$).
+- 普通网络：试图每一刀都直接砍出最终形状. 
+- ResNet：先有一个大致轮廓（$x$），然后每一刀只是对之前的成果进行打磨（$F(x)$）. 
 
-### B. Improved Gradient Flow
+#### B. 改善梯度流
 
-From the perspective of backpropagation, residual structures greatly improve gradient flow.
+从反向传播的角度看，残差结构极大地改善了梯度流. 
 
-In ResNet, the relationship between the output $x_{l+1}$ and input $x_l$ of the $l$-th residual block is:
+在 ResNet 中，第 $l$ 个残差块的输出 $x_{l+1}$ 和输入 $x_l$ 的关系是：
 $$
 x_{l+1} = x_l + F(x_l, W_l)
 $$
-By recursion:
+递推可得：
 $$
 x_L=x_l+\\sum_{i=l}^{L-1}F(x_i,W_i),\\ \\forall L>l
 $$
-Assuming the loss function is $\\mathcal{L}$, according to the chain rule, the gradient with respect to input $x_l$ can be expressed as:
+假设损失函数为 $\\mathcal{L}$，根据链式法则，关于输入 $x_l$ 的梯度可以表示为：
 $$
 \\frac{\\partial \\mathcal{L}}{\\partial x_l}
 =
@@ -86,23 +86,23 @@ $$
 \\prod_{k=l}^{L-1}\\left(I+J_k\\right)
 $$
 
-- The $1$ in the formula ensures that **gradient signals from deep layers can flow unimpeded back to shallow layers through skip connections**.
-- This structure **breaks the multiplicative gradient decay effect in traditional networks**: even if gradients in the $F(x)$ part are small, as long as the $1$ term exists, gradients can flow back effectively. This makes training networks with hundreds or even thousands of layers possible.
+- 公式中的 $1$ 保证了**深层的梯度信号可以畅通无阻地通过跳跃连接传回浅层**. 
+- 这种结构**打破了传统网络中梯度的连乘衰减效应**：即便 $F(x)$ 部分的梯度很小，只要 $1$ 这一项存在，梯度就能有效回流. 这使得训练上百层甚至上千层的网络成为可能. 
 
-### C. Smoothing the Optimization Landscape
+#### C. Smoothing the Optimization Landscape
 
-Research (e.g., *Visualizing the Loss Landscape of Neural Nets*, NIPS 2018) shows that ResNet's skip connections greatly smooth the geometry of the loss function (Loss Landscape).
+研究表明（如 *Visualizing the Loss Landscape of Neural Nets*, NIPS 2018），ResNet 的跳跃连接极大地平滑了损失函数的几何形状（Loss Landscape）. 
 
-> Li, H., Xu, Z., Taylor, G., Studer, C., & Goldstein, T. (2018). Visualizing the loss landscape of neural nets. *Advances in neural information processing systems*, 31. https://arxiv.org/pdf/1712.09913
+> *Visualizing the Loss Landscape of Neural Nets*, NIPS 2018, https://arxiv.org/pdf/1712.09913
 
-- **Plain deep networks**: Loss surfaces are very rugged, full of non-convex local minima and saddle points. If the network tries to learn identity mapping but fails, falling into chaotic nonlinear transformations, gradients will vanish or explode in these rugged landscapes.
-- **Residual networks**: Since $x$ can flow directly through, the entire function behaves more like a linear system (linear-like behavior) near initialization. This makes the loss surface smoother and more convex.
+- 普通深层网络：损失曲面非常崎岖，充满了非凸的局部极小值和鞍点. 如果网络试图学习恒等映射但不仅没学好，反而陷入了混乱的非线性变换中，梯度就会在这些崎岖的 landscape 中消失或爆炸. 
+- 残差网络：由于 $x$ 可以直接流过，整个函数在初始化附近表现得更像一个线性系统（Linear-like behavior）. 这使得损失曲面变得更加平滑、凸性更好. 
 
-## Takeaways
+### Takeaways
 
-1. ResNet changes the paradigm of feature extraction, shifting the learning objective from "complete feature reconstruction" to "progressive refinement" of shallow features.
-2. ResNet is easier to learn than traditional networks because fitting zero mappings ($F(x) \\to 0$) is much easier than fitting identity mappings ($H(x) \\to x$). By introducing skip connections, ResNet sets identity mapping as the initial solution, establishing a "performance non-decreasing" baseline mechanism (The "Do No Harm" Principle).
-3. Residual structures improve gradient flow, effectively prevent gradient vanishing, and smooth the loss landscape, making deep networks easier to converge.`
+1. ResNet 改变了特征提取的范式，将学习目标从"全量重构特征"转变为对浅层特征的"渐进式微调". 
+2. ResNet 学习比传统网络容易，本质上是因为拟合零映射（$F(x) \\to 0$）远比拟合恒等映射（$H(x) \\to x$）容易. ResNet 通过引入跳跃连接，将恒等映射设为初始解，确立了"性能不下降"的保底机制（The "Do No Harm" Principle）. 
+3. 残差结构改善了梯度流，有效防止了梯度消失，并平滑了损失函数的 Loss Landscape，使深层网络更易收敛.`
     }
 ];
 
