@@ -516,9 +516,15 @@ body {
 
 .article-body .math-block {
     margin: 2rem 0;
-    padding: 1.5rem;
+    padding: 1.5rem 0;
     text-align: center;
     overflow-x: auto;
+    display: block;
+}
+
+.article-body .math-block .MathJax {
+    display: block !important;
+    margin: 0 auto;
 }
 
 .article-body .math-inline {

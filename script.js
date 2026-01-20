@@ -274,6 +274,22 @@ function markdownToHtml(markdown) {
     
     let html = markdown;
     
+    // First, protect block math formulas before other processing
+    const blockMathPlaceholders = [];
+    html = html.replace(/\$\$([\s\S]*?)\$\$/g, function(match, math) {
+        const placeholder = `__BLOCK_MATH_${blockMathPlaceholders.length}__`;
+        blockMathPlaceholders.push(math.trim());
+        return placeholder;
+    });
+    
+    // Protect inline math formulas
+    const inlineMathPlaceholders = [];
+    html = html.replace(/(?<!\$)\$(?!\$)([^$\n]+?)\$(?!\$)/g, function(match, math) {
+        const placeholder = `__INLINE_MATH_${inlineMathPlaceholders.length}__`;
+        inlineMathPlaceholders.push(math.trim());
+        return placeholder;
+    });
+    
     // Code blocks (do this first to avoid processing inside code)
     html = html.replace(/```([\s\S]*?)```/g, function(match, code) {
         return '<pre><code>' + code.trim() + '</code></pre>';
@@ -319,6 +335,16 @@ function markdownToHtml(markdown) {
             continue;
         }
         
+        // Check if it's a block math placeholder
+        if (line.match(/^__BLOCK_MATH_\d+__$/)) {
+            if (inList) {
+                processedLines.push('</ul>');
+                inList = false;
+            }
+            processedLines.push(line);
+            continue;
+        }
+        
         // Check if it's a list item
         if (line.startsWith('<li>')) {
             if (!inList) {
@@ -352,14 +378,14 @@ function markdownToHtml(markdown) {
     html = html.replace(/<p><\/p>/g, '');
     html = html.replace(/<p>\s*<\/p>/g, '');
     
-    // Math expressions - preserve LaTeX for MathJax
-    // Block math: $$...$$
-    html = html.replace(/\$\$([\s\S]*?)\$\$/g, function(match, math) {
-        return '<div class="math-block">\\[' + math.trim() + '\\]</div>';
+    // Restore block math formulas
+    blockMathPlaceholders.forEach((math, index) => {
+        html = html.replace(`__BLOCK_MATH_${index}__`, `<div class="math-block">\\[${math}\\]</div>`);
     });
-    // Inline math: $...$ (but not $$)
-    html = html.replace(/(?<!\$)\$(?!\$)([^$\n]+?)\$(?!\$)/g, function(match, math) {
-        return '<span class="math-inline">\\(' + math.trim() + '\\)</span>';
+    
+    // Restore inline math formulas
+    inlineMathPlaceholders.forEach((math, index) => {
+        html = html.replace(`__INLINE_MATH_${index}__`, `<span class="math-inline">\\(${math}\\)</span>`);
     });
     
     return html;
