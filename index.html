@@ -1,38 +1,46 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Meta Tags -->
-    <title>深度学习学习心得 - Deep Learning Notes | 神经网络、计算机视觉、NLP学习笔记</title>
-    <meta name="description" content="分享深度学习学习心得，包括神经网络、计算机视觉、自然语言处理等领域的理论知识和实践项目经验。">
-    <meta name="keywords" content="深度学习,神经网络,机器学习,计算机视觉,自然语言处理,PyTorch,TensorFlow,AI学习">
-    <meta name="author" content="深度学习学习者">
+    <title>Deep Learning Research Blog | Model Architecture & Paper Reading</title>
+    <meta name="description" content="Academic blog on deep learning, covering model architectures, paper reviews, and research insights in neural networks, computer vision, and NLP.">
+    <meta name="keywords" content="deep learning, neural networks, machine learning, computer vision, natural language processing, PyTorch, TensorFlow, AI research">
+    <meta name="author" content="Deep Learning Researcher">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="深度学习学习心得 - Deep Learning Notes">
-    <meta property="og:description" content="分享深度学习学习心得，包括神经网络、计算机视觉、自然语言处理等领域的理论知识和实践项目经验。">
+    <meta property="og:title" content="Deep Learning Research Blog">
+    <meta property="og:description" content="Academic blog on deep learning, covering model architectures, paper reviews, and research insights.">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="深度学习学习心得 - Deep Learning Notes">
-    <meta property="twitter:description" content="分享深度学习学习心得，包括神经网络、计算机视觉、自然语言处理等领域的理论知识和实践项目经验。">
+    <meta property="twitter:title" content="Deep Learning Research Blog">
+    <meta property="twitter:description" content="Academic blog on deep learning, covering model architectures, paper reviews, and research insights.">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+    
+    <!-- Google Fonts for academic style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="header">
         <div class="container">
-            <h1 class="logo">🧠 深度学习学习心得</h1>
+            <div class="header-content">
+                <h1 class="logo">Deep Learning Research</h1>
+                <p class="tagline">Model Architecture & Paper Reading</p>
+            </div>
             <nav class="nav">
-                <a href="#home" class="nav-link active">首页</a>
-                <a href="#articles" class="nav-link">文章</a>
-                <a href="#about" class="nav-link">关于</a>
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#articles" class="nav-link">Articles</a>
+                <a href="#about" class="nav-link">About</a>
             </nav>
         </div>
     </header>
@@ -41,20 +49,22 @@
         <!-- Hero Section -->
         <section id="home" class="hero">
             <div class="container">
-                <h2 class="hero-title">欢迎来到我的深度学习学习之旅</h2>
-                <p class="hero-subtitle">记录学习过程中的思考、实践和感悟</p>
+                <div class="hero-content">
+                    <h2 class="hero-title">Deep Learning Research Blog</h2>
+                    <p class="hero-subtitle">Exploring neural network architectures, paper reviews, and research insights in deep learning</p>
+                </div>
                 <div class="hero-stats">
                     <div class="stat-item">
                         <div class="stat-number" id="articleCount">0</div>
-                        <div class="stat-label">学习笔记</div>
+                        <div class="stat-label">Articles</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" id="topicCount">0</div>
-                        <div class="stat-label">主题分类</div>
+                        <div class="stat-label">Categories</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" id="dayCount">0</div>
-                        <div class="stat-label">学习天数</div>
+                        <div class="stat-label">Days Active</div>
                     </div>
                 </div>
             </div>
@@ -63,13 +73,15 @@
         <!-- Articles Section -->
         <section id="articles" class="articles-section">
             <div class="container">
-                <h2 class="section-title">📚 最新文章</h2>
-                <div class="filter-tabs">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="architecture">Model Architecture</button>
-                    <button class="filter-btn" data-filter="paper">Paper Reading</button>
+                <div class="section-header">
+                    <h2 class="section-title">Recent Articles</h2>
+                    <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="architecture">Model Architecture</button>
+                        <button class="filter-btn" data-filter="paper">Paper Reading</button>
+                    </div>
                 </div>
-                <div class="articles-grid" id="articlesGrid">
+                <div class="articles-list" id="articlesGrid">
                     <!-- Articles will be dynamically loaded here -->
                 </div>
             </div>
@@ -78,20 +90,20 @@
         <!-- About Section -->
         <section id="about" class="about-section">
             <div class="container">
-                <h2 class="section-title">关于我</h2>
+                <h2 class="section-title">About</h2>
                 <div class="about-content">
                     <div class="about-text">
-                        <p>你好！我是一名深度学习爱好者，正在不断学习和探索这个令人着迷的领域。</p>
-                        <p>这个网站记录了我学习深度学习过程中的心得体会、实践经验和遇到的问题。希望通过分享，能够帮助到同样在学习路上的朋友们。</p>
-                        <div class="skills">
-                            <h3>学习方向</h3>
-                            <div class="skill-tags">
-                                <span class="skill-tag">神经网络</span>
-                                <span class="skill-tag">计算机视觉</span>
-                                <span class="skill-tag">自然语言处理</span>
-                                <span class="skill-tag">PyTorch</span>
-                                <span class="skill-tag">TensorFlow</span>
-                                <span class="skill-tag">模型优化</span>
+                        <p>Welcome to my research blog on deep learning. This site documents my exploration of neural network architectures, paper reviews, and insights from reading cutting-edge research in the field.</p>
+                        <p>I focus on understanding the theoretical foundations and practical implementations of deep learning models, with particular interest in computer vision, natural language processing, and model optimization techniques.</p>
+                        <div class="research-areas">
+                            <h3>Research Areas</h3>
+                            <div class="area-tags">
+                                <span class="area-tag">Neural Networks</span>
+                                <span class="area-tag">Computer Vision</span>
+                                <span class="area-tag">Natural Language Processing</span>
+                                <span class="area-tag">Model Architecture</span>
+                                <span class="area-tag">PyTorch</span>
+                                <span class="area-tag">TensorFlow</span>
                             </div>
                         </div>
                     </div>
@@ -102,11 +114,10 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 深度学习学习心得. 持续学习中...</p>
+            <p>&copy; 2024 Deep Learning Research Blog. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="script.js"></script>
 </body>
 </html>
-
