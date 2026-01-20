@@ -334,9 +334,9 @@ window.formatDate = formatDate;
 
 // Category labels for article pages
 const categoryLabels = {
-    architecture: "Architecture Notes",
+    architecture: "Model Architecture",
     paper: "Paper Reading",
-    notebook: "Lab Notebook"
+    notebook: "Research Log"
 };
 
 // For article.html compatibility - keep articles array reference
