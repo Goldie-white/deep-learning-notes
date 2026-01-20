@@ -1,11 +1,26 @@
-// Architecture Notes Data (对应 Model Architecture 文件夹)
+// Helper function to extract title from filename
+function getTitleFromFilename(filepath) {
+    const filename = filepath.split('/').pop().split('\\').pop(); // Handle both / and \
+    return filename.replace(/\.md$/, ''); // Remove .md extension
+}
+
+// Architecture Notes Data (对应 Model Architecture Analysis 文件夹)
 const architectureNotes = [
     {
         id: 1,
-        title: "Mathematical Derivation of Residual Blocks",
         tags: ["ResNet", "Math"],
         summary: "残差网络（Residual Network，简称 ResNet）是由 Kaiming He 等人在 2015 年提出的深度神经网络架构。它通过引入\"跳跃连接\"（Skip Connection），允许网络学习残差映射，从而让网络在变深的同时保持可训练性。本文详细分析了残差块背后的数学原理，包括梯度流分析和优化景观的平滑性。",
-        contentFile: "Model Architecture/ResNet.md"
+        contentFile: "Model Architecture Analysis/ResNet.md",
+        createdDate: "2024-01-20",
+        modifiedDate: "2024-01-20"
+    },
+    {
+        id: 2,
+        tags: ["Attention", "Transformer"],
+        summary: "理解 Attention 机制的核心原理和数学基础。",
+        contentFile: "Model Architecture Analysis/理解 Attention 机制.md",
+        createdDate: "2024-01-21",
+        modifiedDate: "2024-01-21"
     }
 ];
 
@@ -54,9 +69,12 @@ function renderArchitectureNotes() {
             `<span class="architecture-tag">${tag}</span>`
         ).join('');
         
+        // Extract title from filename if not provided
+        const title = note.title || getTitleFromFilename(note.contentFile);
+        
         card.innerHTML = `
             <div class="architecture-card-tags">${tagsHtml}</div>
-            <h3 class="architecture-card-title">${note.title}</h3>
+            <h3 class="architecture-card-title">${title}</h3>
             <p class="architecture-card-summary">${note.summary}</p>
             <div class="architecture-card-footer">Read Derivation</div>
         `;
@@ -343,13 +361,13 @@ const categoryLabels = {
 // Articles will load content from contentFile if available
 const articles = architectureNotes.map(note => ({
     id: note.id,
-    title: note.title,
+    title: note.title || getTitleFromFilename(note.contentFile), // Extract from filename if not provided
     excerpt: note.summary,
     category: "architecture",
-    date: "2024-01-20",
-    readTime: "15分钟",
+    createdDate: note.createdDate || "2024-01-20",
+    modifiedDate: note.modifiedDate || note.createdDate || "2024-01-20",
     contentFile: note.contentFile, // Path to markdown file
-    content: `# ${note.title}\n\n${note.summary}` // Fallback content
+    content: `# ${note.title || getTitleFromFilename(note.contentFile)}\n\n${note.summary}` // Fallback content
 }));
 
 // Load ResNet content for article with id 1

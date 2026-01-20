@@ -97,18 +97,31 @@
                 return;
             }
             
+            // Extract title from filename if loading from file
+            let articleTitle = article.title;
+            if (article.contentFile && !articleTitle) {
+                const filename = article.contentFile.split('/').pop().split('\\').pop();
+                articleTitle = filename.replace(/\.md$/, '');
+            }
+            
             // Update page title
-            document.title = article.title + ' | MICKEY\'S ML&MATH BLOG';
+            document.title = articleTitle + ' | MICKEY\'S ML&MATH BLOG';
             
             // Render article header first
             const articleContent = document.getElementById('articleContent');
+            const createdDate = article.createdDate || article.date || "2024-01-20";
+            const modifiedDate = article.modifiedDate || createdDate;
+            const createdFormatted = formatDate(createdDate);
+            const modifiedFormatted = formatDate(modifiedDate);
+            const showModified = modifiedDate !== createdDate;
+            
             articleContent.innerHTML = `
                 <div class="article-header">
                     <span class="article-category">${categoryLabels[article.category]}</span>
-                    <h1 class="article-title">${article.title}</h1>
+                    <h1 class="article-title">${articleTitle}</h1>
                     <div class="article-meta">
-                        <span class="article-date">📅 ${formatDate(article.date)}</span>
-                        <span>⏱️ ${article.readTime}</span>
+                        <span class="article-date">📅 Published: ${createdFormatted}</span>
+                        ${showModified ? `<span class="article-date">✏️ Updated: ${modifiedFormatted}</span>` : ''}
                     </div>
                 </div>
                 <div class="article-body" id="articleBody">Loading...</div>
