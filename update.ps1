@@ -1,13 +1,16 @@
 # Blog Update Script for Windows PowerShell
 # Usage: .\update.ps1
 
-Write-Host "🚀 Starting blog update..." -ForegroundColor Green
+Write-Host "Starting blog update..." -ForegroundColor Green
 
 # Check if we're in a git repository
 try {
     $null = git rev-parse --git-dir 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        throw "Not a git repository"
+    }
 } catch {
-    Write-Host "❌ Error: Not a git repository!" -ForegroundColor Red
+    Write-Host "ERROR: Not a git repository!" -ForegroundColor Red
     Write-Host "Please run 'git init' first, or navigate to a git repository."
     exit 1
 }
@@ -15,16 +18,16 @@ try {
 # Check if there are any changes
 $status = git status --porcelain
 if (-not $status) {
-    Write-Host "⚠️  No changes to commit." -ForegroundColor Yellow
+    Write-Host "WARNING: No changes to commit." -ForegroundColor Yellow
     exit 0
 }
 
 # Show status
-Write-Host "`n📋 Current status:" -ForegroundColor Green
+Write-Host "`nCurrent status:" -ForegroundColor Green
 git status --short
 
 # Ask for commit message
-Write-Host "`n💬 Enter commit message (or press Enter for default):" -ForegroundColor Green
+Write-Host "`nEnter commit message (or press Enter for default):" -ForegroundColor Green
 $commitMessage = Read-Host
 
 # Use default message if empty
@@ -34,23 +37,26 @@ if ([string]::IsNullOrWhiteSpace($commitMessage)) {
 }
 
 # Add all changes
-Write-Host "`n📦 Adding changes..." -ForegroundColor Green
+Write-Host "`nAdding changes..." -ForegroundColor Green
 git add .
-
-# Commit changes
-Write-Host "💾 Committing changes..." -ForegroundColor Green
-try {
-    git commit -m $commitMessage
-    Write-Host "✅ Changes committed successfully!" -ForegroundColor Green
-} catch {
-    Write-Host "❌ Commit failed!" -ForegroundColor Red
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: Failed to add changes!" -ForegroundColor Red
     exit 1
 }
+
+# Commit changes
+Write-Host "Committing changes..." -ForegroundColor Green
+git commit -m $commitMessage
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: Commit failed!" -ForegroundColor Red
+    exit 1
+}
+Write-Host "Changes committed successfully!" -ForegroundColor Green
 
 # Check if remote exists
 $remotes = git remote
 if ($remotes -notcontains "origin") {
-    Write-Host "⚠️  No remote 'origin' found." -ForegroundColor Yellow
+    Write-Host "WARNING: No remote 'origin' found." -ForegroundColor Yellow
     Write-Host "Please add a remote repository first:"
     Write-Host "  git remote add origin <your-repo-url>"
     exit 1
@@ -58,26 +64,46 @@ if ($remotes -notcontains "origin") {
 
 # Get current branch name
 $currentBranch = git branch --show-current
-
-# Push to remote
-Write-Host "`n🚀 Pushing to remote repository..." -ForegroundColor Green
-Write-Host "If authentication is required, a browser window will open." -ForegroundColor Yellow
-Write-Host "Please complete the authentication in the browser.`n" -ForegroundColor Yellow
-
-try {
-    git push origin $currentBranch
-    Write-Host "`n✅ Successfully pushed to origin/$currentBranch!" -ForegroundColor Green
-    Write-Host "🎉 Blog update complete!" -ForegroundColor Green
-} catch {
-    Write-Host "`n❌ Push failed!" -ForegroundColor Red
-    Write-Host "Possible reasons:" -ForegroundColor Yellow
-    Write-Host "  1. Authentication required - check if browser opened"
-    Write-Host "  2. Network issues"
-    Write-Host "  3. Remote repository doesn't exist or you don't have access"
-    Write-Host ""
-    Write-Host "To manually authenticate:"
-    Write-Host "  - For HTTPS: git push origin $currentBranch"
-    Write-Host "  - For SSH: Make sure your SSH key is added to GitHub/GitLab"
+if (-not $currentBranch) {
+    Write-Host "ERROR: Could not determine current branch!" -ForegroundColor Red
     exit 1
 }
 
+# Get remote URL to determine authentication method
+$remoteUrl = git remote get-url origin
+Write-Host "`nRemote URL: $remoteUrl" -ForegroundColor Cyan
+
+# Push to remote
+Write-Host "`nPushing to remote repository..." -ForegroundColor Green
+if ($remoteUrl -like "https://*") {
+    Write-Host "Using HTTPS authentication." -ForegroundColor Yellow
+    Write-Host "If authentication is required, a browser window will open." -ForegroundColor Yellow
+    Write-Host "Please complete the authentication in the browser.`n" -ForegroundColor Yellow
+} else {
+    Write-Host "Using SSH authentication." -ForegroundColor Yellow
+    Write-Host "Make sure your SSH key is configured.`n" -ForegroundColor Yellow
+}
+
+# Push with timeout handling
+$pushOutput = git push origin $currentBranch 2>&1
+$pushExitCode = $LASTEXITCODE
+
+if ($pushExitCode -eq 0) {
+    Write-Host "`nSuccessfully pushed to origin/$currentBranch!" -ForegroundColor Green
+    Write-Host "Blog update complete!" -ForegroundColor Green
+} else {
+    Write-Host "`nPush failed!" -ForegroundColor Red
+    Write-Host "Exit code: $pushExitCode" -ForegroundColor Red
+    Write-Host "`nOutput:" -ForegroundColor Yellow
+    Write-Host $pushOutput
+    
+    Write-Host "`nPossible reasons:" -ForegroundColor Yellow
+    Write-Host "  1. Authentication required - check if browser opened"
+    Write-Host "  2. Network issues"
+    Write-Host "  3. Remote repository doesn't exist or you don't have access"
+    Write-Host "  4. Branch protection rules"
+    Write-Host ""
+    Write-Host "To manually push:" -ForegroundColor Cyan
+    Write-Host "  git push origin $currentBranch"
+    exit 1
+}
