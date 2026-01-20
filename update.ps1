@@ -50,7 +50,8 @@ function Get-ExistingFiles($arrayName) {
 
 # Function to get next available ID
 function Get-NextId($arrayName) {
-    $pattern = "$arrayName\s*=\s*\[(.*?)\];"
+    # Use multiline regex to match array content across multiple lines
+    $pattern = "(?s)$arrayName\s*=\s*\[(.*?)\];"
     if ($scriptContent -match $pattern) {
         $arrayContent = $matches[1]
         $idPattern = 'id:\s*(\d+)'
@@ -99,12 +100,15 @@ foreach ($folder in $folders.Keys) {
         foreach ($existing in $existingFiles) {
             $existingNormalized = $existing.Replace('\', '/').Trim()
             $normalizedPathTrimmed = $normalizedPath.Trim()
-            # Match by exact path, or by filename at the end of path
+            # Match by exact path (case-insensitive), or by filename at the end of path
+            # Also check if the filename appears anywhere in the path
             if ($existingNormalized -eq $normalizedPathTrimmed -or 
+                $existingNormalized.ToLower() -eq $normalizedPathTrimmed.ToLower() -or
                 $existingNormalized -eq $normalizedPathTrimmed.Replace('/', '\') -or
-                $existingNormalized.EndsWith("/$($file.Name)") -or
-                $existingNormalized.EndsWith("\$($file.Name)") -or
-                $existingNormalized -eq $file.Name) {
+                $existingNormalized.EndsWith("/$($file.Name)", [System.StringComparison]::OrdinalIgnoreCase) -or
+                $existingNormalized.EndsWith("\$($file.Name)", [System.StringComparison]::OrdinalIgnoreCase) -or
+                $existingNormalized -eq $file.Name -or
+                $existingNormalized.Contains($file.Name)) {
                 $exists = $true
                 break
             }
