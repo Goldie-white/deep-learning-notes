@@ -173,16 +173,22 @@ function renderArticles(filter) {
         : articles.filter(a => a.category === filter);
     
     console.log('Filter:', filter, 'Filtered articles:', filteredArticles.length);
+    console.log('Articles data:', filteredArticles);
     
     if (filteredArticles.length === 0) {
         grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 3rem 0;">No articles found in this category.</p>';
         return;
     }
     
-    grid.innerHTML = filteredArticles.map(article => {
+    // Clear previous content
+    grid.innerHTML = '';
+    
+    filteredArticles.forEach(article => {
         console.log('Rendering article:', article.id, article.title);
-        return `
-        <article class="article-card" data-article-id="${article.id}">
+        const articleCard = document.createElement('article');
+        articleCard.className = 'article-card';
+        articleCard.setAttribute('data-article-id', article.id);
+        articleCard.innerHTML = `
             <div class="article-header-meta">
                 <span class="article-category">${categoryLabels[article.category]}</span>
                 <span class="article-date">${formatDate(article.date)}</span>
@@ -192,21 +198,21 @@ function renderArticles(filter) {
             <div class="article-meta">
                 <span class="read-time">⏱️ ${article.readTime}</span>
             </div>
-        </article>
-    `;
-    }).join('');
-    
-    // Add click event listeners
-    const articleCards = grid.querySelectorAll('.article-card');
-    articleCards.forEach(card => {
-        const articleId = parseInt(card.getAttribute('data-article-id'));
-        card.addEventListener('click', function(e) {
+        `;
+        
+        // Add click event listener
+        articleCard.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Card clicked, article ID:', articleId);
-            openArticle(articleId);
+            e.stopPropagation();
+            console.log('Card clicked, article ID:', article.id);
+            openArticle(article.id);
         });
-        card.style.cursor = 'pointer';
+        articleCard.style.cursor = 'pointer';
+        
+        grid.appendChild(articleCard);
     });
+    
+    console.log('Articles rendered:', grid.children.length);
     
     console.log('Articles rendered:', filteredArticles.length);
 }
