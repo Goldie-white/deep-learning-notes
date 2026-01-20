@@ -146,16 +146,15 @@ function renderArticles(filter) {
     
     filteredArticles.forEach(article => {
         console.log('Rendering article:', article.id, article.title);
-        const articleCard = document.createElement('article');
-        articleCard.className = 'article-card';
-        articleCard.setAttribute('data-article-id', article.id);
         
-        // Create link wrapper
+        // Create article card as a link that navigates to new page
         const articleLink = document.createElement('a');
         articleLink.href = `article.html?id=${article.id}`;
+        articleLink.className = 'article-card';
         articleLink.style.textDecoration = 'none';
         articleLink.style.color = 'inherit';
         articleLink.style.display = 'block';
+        articleLink.style.cursor = 'pointer';
         
         articleLink.innerHTML = `
             <div class="article-header-meta">
@@ -169,10 +168,7 @@ function renderArticles(filter) {
             </div>
         `;
         
-        articleCard.appendChild(articleLink);
-        articleCard.style.cursor = 'pointer';
-        
-        grid.appendChild(articleCard);
+        grid.appendChild(articleLink);
     });
     
     console.log('Articles rendered:', grid.children.length);
