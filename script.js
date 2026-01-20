@@ -116,49 +116,10 @@ const categoryLabels = {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Articles loaded:', articles.length);
     console.log('Articles:', articles);
-    initializeStats();
     renderArticles('all');
     setupFilterButtons();
     setupNavigation();
 });
-
-// Initialize statistics
-function initializeStats() {
-    const articleCount = articles.length;
-    const topicCount = new Set(articles.map(a => a.category)).size;
-    const dayCount = calculateLearningDays();
-    
-    animateCounter('articleCount', articleCount);
-    animateCounter('topicCount', topicCount);
-    animateCounter('dayCount', dayCount);
-}
-
-// Animate counter
-function animateCounter(elementId, target) {
-    const element = document.getElementById(elementId);
-    const duration = 2000;
-    const increment = target / (duration / 16);
-    let current = 0;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            current = target;
-            clearInterval(timer);
-        }
-        element.textContent = Math.floor(current);
-    }, 16);
-}
-
-// Calculate learning days (simplified)
-function calculateLearningDays() {
-    const dates = articles.map(a => new Date(a.date));
-    const minDate = new Date(Math.min(...dates));
-    const maxDate = new Date(Math.max(...dates));
-    const diffTime = Math.abs(maxDate - minDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays || 1;
-}
 
 // Render articles
 function renderArticles(filter) {
@@ -200,12 +161,12 @@ function renderArticles(filter) {
             </div>
         `;
         
-        // Add click event listener
+        // Add click event listener - navigate to article page
         articleCard.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             console.log('Card clicked, article ID:', article.id);
-            openArticle(article.id);
+            window.location.href = `article.html?id=${article.id}`;
         });
         articleCard.style.cursor = 'pointer';
         
