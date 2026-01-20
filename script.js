@@ -320,7 +320,8 @@ function markdownToHtml(markdown) {
     // Inline code
     html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
     
-    // Headers
+    // Headers - process from most # to least # to avoid conflicts
+    html = html.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
     html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
     html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
     html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
@@ -380,8 +381,8 @@ function markdownToHtml(markdown) {
                 inList = false;
             }
             
-            // Check if it's already a block element
-            if (line.match(/^<(h[1-6]|pre|blockquote|ul|ol)/)) {
+            // Check if it's already a block element (including h4)
+            if (line.match(/^<(h[1-6]|pre|blockquote|ul|ol|div)/)) {
                 processedLines.push(line);
             } else {
                 // Regular paragraph
