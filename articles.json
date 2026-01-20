@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "title": "ResNet",
+        "excerpt": "残差网络（Residual Network，简称 ResNet）是由 Kaiming He 等人在 2015 年提出的深度神经网络架构。它通过引入\"跳跃连接\"（Skip Connection），允许网络学习残差映射，从而让网络在变深的同时保持可训练性。",
+        "category": "architecture",
+        "date": "2024-01-20",
+        "readTime": "15分钟",
+        "contentFile": "ResNet.md"
+    }
+]
+

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>About | Mickey</title>
+    <meta name="description" content="About Mickey - Master's Student in Deep Learning & Math">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .about-page {
+            padding: 4rem 0;
+            min-height: calc(100vh - 300px);
+        }
+        
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .about-content h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+        
+        .about-content h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .about-content p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-content ul {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+        
+        .about-content li {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 0.75rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 3rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <header class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <div class="logo-text"><a href="index.html" style="text-decoration: none; color: inherit;">Mickey</a></div>
+                <nav class="nav">
+                    <a href="index.html#home" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link active">About</a>
+                    <a href="index.html#architecture" class="nav-link">Arch Notes</a>
+                    <a href="index.html#papers" class="nav-link">Papers</a>
+                    <a href="index.html#notebook" class="nav-link">Notebook</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="about-page">
+            <div class="container">
+                <div class="about-content">
+                    <h1>About</h1>
+                    
+                    <p>
+                        Welcome to my research blog. I'm a Master's student deeply interested in the theoretical foundations of deep learning, particularly in understanding how neural networks learn and generalize.
+                    </p>
+                    
+                    <h2>Research Interests</h2>
+                    <ul>
+                        <li><strong>Reinforcement Learning (RL):</strong> Exploring how agents learn optimal policies through interaction, with a focus on theoretical guarantees and sample efficiency.</li>
+                        <li><strong>In-Context Learning (ICL):</strong> Investigating how large language models can learn from examples provided in the context, without explicit parameter updates.</li>
+                        <li><strong>Grokking:</strong> Understanding the sudden phase transitions where models suddenly "get it" after extended training periods, and what drives these phenomena.</li>
+                    </ul>
+                    
+                    <h2>Approach</h2>
+                    <p>
+                        My research interest lies in the theoretical foundations of deep learning. I aim to combine perspectives and methods from mathematics and physics to provide effective explanations for complex neural network systems and the counterintuitive phenomena they exhibit.
+                    </p>
+                    
+                    <p>
+                        This blog documents my exploration of neural network architectures, paper reviews, and insights from reading cutting-edge research in the field. Here you'll find:
+                    </p>
+                    
+                    <ul>
+                        <li><strong>Architecture Notes:</strong> Detailed mathematical derivations and re-implementation details of model architectures.</li>
+                        <li><strong>Paper Reading:</strong> Summaries and structural analysis of papers in RL, ICL, and theoretical deep learning.</li>
+                        <li><strong>Lab Notebook:</strong> Behind-the-scenes thoughts, debugging diaries, and experimental observations.</li>
+                    </ul>
+                    
+                    <h2>Contact</h2>
+                    <p>
+                        Feel free to reach out via email or connect on GitHub. I'm always interested in discussing research ideas and collaborations.
+                    </p>
+                    
+                    <a href="index.html" class="back-link">← Back to Home</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="copyright">&copy; 2024 Mickey. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-link">GitHub</a>
+                    <a href="mailto:" class="social-link">Email</a>
+                    <a href="https://scholar.google.com" target="_blank" rel="noopener noreferrer" class="social-link">Scholar</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+
