@@ -21,11 +21,17 @@
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
                 displayMath: [['$$', '$$'], ['\\[', '\\]']],
                 processEscapes: true,
-                processEnvironments: true
+                processEnvironments: true,
+                autoload: {
+                    color: [],
+                    colorv2: ['color']
+                },
+                packages: {'[+]': ['ams', 'newcommand', 'configmacros']}
             },
             options: {
                 ignoreHtmlClass: 'tex2jax_ignore',
-                processHtmlClass: 'tex2jax_process'
+                processHtmlClass: 'tex2jax_process',
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
             }
         };
     </script>
@@ -103,14 +109,30 @@
                 </div>
             `;
             
-            // Render MathJax after content is loaded
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([articleContent]).then(() => {
-                    console.log('MathJax rendering complete');
-                }).catch((err) => {
-                    console.error('MathJax rendering error:', err);
-                });
+            // Wait for MathJax to be ready, then render
+            function renderMathJax() {
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    window.MathJax.typesetPromise([articleContent]).then(() => {
+                        console.log('MathJax rendering complete');
+                    }).catch((err) => {
+                        console.error('MathJax rendering error:', err);
+                    });
+                } else if (window.MathJax && window.MathJax.startup) {
+                    // MathJax 3.x startup
+                    window.MathJax.startup.document.state(0);
+                    window.MathJax.typesetPromise([articleContent]).then(() => {
+                        console.log('MathJax rendering complete');
+                    }).catch((err) => {
+                        console.error('MathJax rendering error:', err);
+                    });
+                } else {
+                    // MathJax not loaded yet, wait a bit
+                    setTimeout(renderMathJax, 100);
+                }
             }
+            
+            // Start rendering after a short delay to ensure DOM is ready
+            setTimeout(renderMathJax, 200);
         });
     </script>
 </body>

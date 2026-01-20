@@ -378,9 +378,11 @@ function markdownToHtml(markdown) {
     html = html.replace(/<p><\/p>/g, '');
     html = html.replace(/<p>\s*<\/p>/g, '');
     
-    // Restore block math formulas
+    // Restore block math formulas - use $$ for MathJax compatibility
     blockMathPlaceholders.forEach((math, index) => {
-        html = html.replace(`__BLOCK_MATH_${index}__`, `<div class="math-block">\\[${math}\\]</div>`);
+        // Clean up math content (remove extra whitespace/newlines)
+        const cleanMath = math.replace(/\s+/g, ' ').trim();
+        html = html.replace(`__BLOCK_MATH_${index}__`, `<div class="math-block">$$${cleanMath}$$</div>`);
     });
     
     // Restore inline math formulas
