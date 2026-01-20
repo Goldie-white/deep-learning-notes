@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://goldie-white.github.io/deep-learning-notes/sitemap.xml
+
