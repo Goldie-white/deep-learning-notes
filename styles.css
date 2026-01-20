@@ -517,17 +517,12 @@ body {
 .article-body .math-block {
     margin: 2rem 0;
     padding: 1.5rem;
-    background: var(--bg-light);
-    border-radius: 4px;
     text-align: center;
     overflow-x: auto;
-    font-family: 'Times New Roman', serif;
-    border: 1px solid var(--border-color);
 }
 
 .article-body .math-inline {
-    font-family: 'Times New Roman', serif;
-    font-style: italic;
+    /* MathJax will handle styling */
 }
 
 /* Responsive Design */

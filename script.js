@@ -149,7 +149,15 @@ function renderArticles(filter) {
         const articleCard = document.createElement('article');
         articleCard.className = 'article-card';
         articleCard.setAttribute('data-article-id', article.id);
-        articleCard.innerHTML = `
+        
+        // Create link wrapper
+        const articleLink = document.createElement('a');
+        articleLink.href = `article.html?id=${article.id}`;
+        articleLink.style.textDecoration = 'none';
+        articleLink.style.color = 'inherit';
+        articleLink.style.display = 'block';
+        
+        articleLink.innerHTML = `
             <div class="article-header-meta">
                 <span class="article-category">${categoryLabels[article.category]}</span>
                 <span class="article-date">${formatDate(article.date)}</span>
@@ -161,13 +169,7 @@ function renderArticles(filter) {
             </div>
         `;
         
-        // Add click event listener - navigate to article page
-        articleCard.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Card clicked, article ID:', article.id);
-            window.location.href = `article.html?id=${article.id}`;
-        });
+        articleCard.appendChild(articleLink);
         articleCard.style.cursor = 'pointer';
         
         grid.appendChild(articleCard);
@@ -354,10 +356,15 @@ function markdownToHtml(markdown) {
     html = html.replace(/<p><\/p>/g, '');
     html = html.replace(/<p>\s*<\/p>/g, '');
     
-    // Math expressions - preserve LaTeX (can be enhanced with MathJax later)
-    // For now, just preserve them as-is with some styling
-    html = html.replace(/\$\$([^$]+)\$\$/g, '<div class="math-block">$$$1$$</div>');
-    html = html.replace(/\$([^$\n]+)\$/g, '<span class="math-inline">$$$1$$</span>');
+    // Math expressions - preserve LaTeX for MathJax
+    // Block math: $$...$$
+    html = html.replace(/\$\$([\s\S]*?)\$\$/g, function(match, math) {
+        return '<div class="math-block">\\[' + math.trim() + '\\]</div>';
+    });
+    // Inline math: $...$ (but not $$)
+    html = html.replace(/(?<!\$)\$(?!\$)([^$\n]+?)\$(?!\$)/g, function(match, math) {
+        return '<span class="math-inline">\\(' + math.trim() + '\\)</span>';
+    });
     
     return html;
 }

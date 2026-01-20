@@ -12,6 +12,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -84,6 +96,15 @@
                     <a href="index.html" style="color: var(--primary-color); text-decoration: none; font-family: 'Inter', sans-serif;">← Back to Articles</a>
                 </div>
             `;
+            
+            // Render MathJax after content is loaded
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([articleContent]).then(() => {
+                    console.log('MathJax rendering complete');
+                }).catch((err) => {
+                    console.error('MathJax rendering error:', err);
+                });
+            }
         });
     </script>
 </body>
