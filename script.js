@@ -179,8 +179,10 @@ function renderArticles(filter) {
         return;
     }
     
-    grid.innerHTML = filteredArticles.map(article => `
-        <article class="article-card" onclick="openArticle(${article.id})">
+    grid.innerHTML = filteredArticles.map(article => {
+        console.log('Rendering article:', article.id, article.title);
+        return `
+        <article class="article-card" data-article-id="${article.id}">
             <div class="article-header-meta">
                 <span class="article-category">${categoryLabels[article.category]}</span>
                 <span class="article-date">${formatDate(article.date)}</span>
@@ -191,7 +193,20 @@ function renderArticles(filter) {
                 <span class="read-time">⏱️ ${article.readTime}</span>
             </div>
         </article>
-    `).join('');
+    `;
+    }).join('');
+    
+    // Add click event listeners
+    const articleCards = grid.querySelectorAll('.article-card');
+    articleCards.forEach(card => {
+        const articleId = parseInt(card.getAttribute('data-article-id'));
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Card clicked, article ID:', articleId);
+            openArticle(articleId);
+        });
+        card.style.cursor = 'pointer';
+    });
     
     console.log('Articles rendered:', filteredArticles.length);
 }
@@ -245,8 +260,14 @@ function setupNavigation() {
 
 // Open article - show article content
 function openArticle(id) {
+    console.log('Opening article:', id);
     const article = articles.find(a => a.id === id);
-    if (!article) return;
+    if (!article) {
+        console.error('Article not found:', id);
+        return;
+    }
+    
+    console.log('Article found:', article.title);
     
     // Create modal overlay
     const modal = document.createElement('div');
@@ -268,6 +289,10 @@ function openArticle(id) {
     document.body.appendChild(modal);
     document.body.style.overflow = 'hidden';
 }
+
+// Make functions globally accessible
+window.openArticle = openArticle;
+window.closeArticle = closeArticle;
 
 // Close article modal
 function closeArticle() {
