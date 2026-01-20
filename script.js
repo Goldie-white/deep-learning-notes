@@ -10,31 +10,10 @@ const architectureNotes = [
 ];
 
 // Paper Reading Data
-const papers = [
-    {
-        id: 1,
-        title: "Deep Residual Learning for Image Recognition",
-        authors: "He et al.",
-        year: 2015,
-        takeaway: "ResNet 的核心创新在于将恒等映射设为初始解，使网络学习零映射而非恒等映射，从而解决了深度网络的退化问题。这种设计哲学——'Do No Harm' Principle——为后续的深度架构设计提供了重要启示。"
-    }
-];
+const papers = [];
 
 // Lab Notebook Data
-const notebookEntries = [
-    {
-        id: 1,
-        date: "2024-01-20",
-        title: "Why Cross-Entropy failed today",
-        snippet: "Spent 3 hours debugging why my model wasn't learning. Turns out I was using cross-entropy loss on logits that weren't properly normalized. The gradients were vanishing because the softmax was saturating. Lesson: always check your activation functions match your loss function."
-    },
-    {
-        id: 2,
-        date: "2024-01-18",
-        title: "Grokking observation: sudden phase transition",
-        snippet: "Noticed something interesting in my grokking experiments. The model seems to plateau for a long time, then suddenly 'gets it' around epoch 2000. The loss drops dramatically in just a few epochs. This phase transition behavior is fascinating - need to investigate the weight dynamics during this period."
-    }
-];
+const notebookEntries = [];
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {

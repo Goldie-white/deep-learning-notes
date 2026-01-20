@@ -56,10 +56,11 @@ body {
 
 .logo-text {
     font-family: 'Inter', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-primary);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
 }
 
 .nav {
@@ -449,6 +450,11 @@ body {
     .navbar-content {
         flex-direction: column;
         gap: 1rem;
+    }
+
+    .logo-text {
+        font-size: 1rem;
+        text-align: center;
     }
 
     .nav {
