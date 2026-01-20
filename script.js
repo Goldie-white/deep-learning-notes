@@ -1,18 +1,18 @@
-// Architecture Notes Data
+// Architecture Notes Data (对应 Model Architecture 文件夹)
 const architectureNotes = [
     {
         id: 1,
         title: "Mathematical Derivation of Residual Blocks",
         tags: ["ResNet", "Math"],
         summary: "残差网络（Residual Network，简称 ResNet）是由 Kaiming He 等人在 2015 年提出的深度神经网络架构。它通过引入\"跳跃连接\"（Skip Connection），允许网络学习残差映射，从而让网络在变深的同时保持可训练性。本文详细分析了残差块背后的数学原理，包括梯度流分析和优化景观的平滑性。",
-        contentFile: "ResNet.md"
+        contentFile: "Model Architecture/ResNet.md"
     }
 ];
 
-// Paper Reading Data
+// Paper Reading Data (对应 Paper Reading 文件夹)
 const papers = [];
 
-// Lab Notebook Data
+// Lab Notebook Data (对应 Research Log 文件夹)
 const notebookEntries = [];
 
 // Initialize the page
@@ -340,7 +340,7 @@ const categoryLabels = {
 };
 
 // For article.html compatibility - keep articles array reference
-// Note: This will be populated with actual content when needed
+// Articles will load content from contentFile if available
 const articles = architectureNotes.map(note => ({
     id: note.id,
     title: note.title,
@@ -348,7 +348,8 @@ const articles = architectureNotes.map(note => ({
     category: "architecture",
     date: "2024-01-20",
     readTime: "15分钟",
-    content: `# ${note.title}\n\n${note.summary}`
+    contentFile: note.contentFile, // Path to markdown file
+    content: `# ${note.title}\n\n${note.summary}` // Fallback content
 }));
 
 // Load ResNet content for article with id 1

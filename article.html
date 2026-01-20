@@ -100,7 +100,7 @@
             // Update page title
             document.title = article.title + ' | MICKEY\'S ML&MATH BLOG';
             
-            // Render article
+            // Render article header first
             const articleContent = document.getElementById('articleContent');
             articleContent.innerHTML = `
                 <div class="article-header">
@@ -111,16 +111,43 @@
                         <span>⏱️ ${article.readTime}</span>
                     </div>
                 </div>
-                <div class="article-body">${markdownToHtml(article.content)}</div>
+                <div class="article-body" id="articleBody">Loading...</div>
                 <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
                     <a href="index.html" style="color: var(--primary-color); text-decoration: none; font-family: 'Inter', sans-serif;">← Back to Articles</a>
                 </div>
             `;
             
+            const articleBody = document.getElementById('articleBody');
+            
+            // Load content from file if contentFile exists, otherwise use article.content
+            async function loadArticleContent() {
+                let content = article.content;
+                
+                // If article has contentFile, try to load from file
+                if (article.contentFile) {
+                    try {
+                        const response = await fetch(article.contentFile);
+                        if (response.ok) {
+                            content = await response.text();
+                        } else {
+                            console.warn(`Failed to load ${article.contentFile}, using default content`);
+                        }
+                    } catch (e) {
+                        console.warn(`Error loading ${article.contentFile}:`, e);
+                    }
+                }
+                
+                // Render markdown content
+                articleBody.innerHTML = markdownToHtml(content);
+                
+                // Render MathJax
+                renderMathJax();
+            }
+            
             // Wait for MathJax to be ready, then render
             function renderMathJax() {
                 if (window.MathJax && window.MathJax.typesetPromise) {
-                    window.MathJax.typesetPromise([articleContent]).then(() => {
+                    window.MathJax.typesetPromise([articleBody]).then(() => {
                         console.log('MathJax rendering complete');
                     }).catch((err) => {
                         console.error('MathJax rendering error:', err);
@@ -128,7 +155,7 @@
                 } else if (window.MathJax && window.MathJax.startup) {
                     // MathJax 3.x startup
                     window.MathJax.startup.document.state(0);
-                    window.MathJax.typesetPromise([articleContent]).then(() => {
+                    window.MathJax.typesetPromise([articleBody]).then(() => {
                         console.log('MathJax rendering complete');
                     }).catch((err) => {
                         console.error('MathJax rendering error:', err);
@@ -139,8 +166,8 @@
                 }
             }
             
-            // Start rendering after a short delay to ensure DOM is ready
-            setTimeout(renderMathJax, 200);
+            // Load content
+            loadArticleContent();
         });
     </script>
 </body>

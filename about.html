@@ -16,6 +16,19 @@
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
     
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    
     <link rel="stylesheet" href="styles.css">
     <style>
         .about-page {
@@ -99,38 +112,81 @@
     <main>
         <section class="about-page">
             <div class="container">
-                <div class="about-content">
-                    <h1>About</h1>
-                    
-                    <p>
-                        Welcome to my research blog. I'm exploring the theory of AI, seeking to illuminate the neural black box through the lens of mathematics and physics.
-                    </p>
-                    
-                    <h2>Research Focus</h2>
-                    <p>
-                        My research interest lies in the theoretical foundations of deep learning. I aim to combine perspectives and methods from mathematics and physics to provide effective explanations for complex neural network systems and the counterintuitive phenomena they exhibit.
-                    </p>
-                    
-                    <p>
-                        This blog documents my exploration of neural network architectures, paper reviews, and insights from reading cutting-edge research in the field. Here you'll find:
-                    </p>
-                    
-                    <ul>
-                        <li><strong>Architecture Notes:</strong> Detailed mathematical derivations and re-implementation details of model architectures.</li>
-                        <li><strong>Paper Reading:</strong> Summaries and structural analysis of papers in RL, ICL, and theoretical deep learning.</li>
-                        <li><strong>Lab Notebook:</strong> Behind-the-scenes thoughts, debugging diaries, and experimental observations.</li>
-                    </ul>
-                    
-                    <h2>Contact</h2>
-                    <p>
-                        Feel free to reach out via email or connect on GitHub. I'm always interested in discussing research ideas and collaborations.
-                    </p>
-                    
-                    <a href="index.html" class="back-link">← Back to Home</a>
+                <div class="about-content" id="aboutContent">
+                    <p>Loading...</p>
                 </div>
             </div>
         </section>
     </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Load About Me content from markdown file
+        async function loadAboutMe() {
+            const aboutContent = document.getElementById('aboutContent');
+            
+            // Try to find the markdown file in About Me folder
+            // Common names: about.md, About.md, About Me.md, README.md
+            const possibleFiles = [
+                'About Me/about.md',
+                'About Me/About.md',
+                'About Me/About Me.md',
+                'About Me/README.md'
+            ];
+            
+            let markdown = null;
+            let fileFound = false;
+            
+            for (const file of possibleFiles) {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        markdown = await response.text();
+                        fileFound = true;
+                        break;
+                    }
+                } catch (e) {
+                    // Try next file
+                    continue;
+                }
+            }
+            
+            if (fileFound && markdown) {
+                // Convert markdown to HTML and render
+                const html = markdownToHtml(markdown);
+                aboutContent.innerHTML = html + '<a href="index.html" class="back-link">← Back to Home</a>';
+                
+                // Render MathJax
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    window.MathJax.typesetPromise([aboutContent]).catch(err => console.error('MathJax error:', err));
+                }
+            } else {
+                // Fallback to default content (same as original about.html)
+                aboutContent.innerHTML = `
+                    <h1>About</h1>
+                    <p>Welcome to my research blog. I'm exploring the theory of AI, seeking to illuminate the neural black box through the lens of mathematics and physics.</p>
+                    <h2>Research Focus</h2>
+                    <p>My research interest lies in the theoretical foundations of deep learning. I aim to combine perspectives and methods from mathematics and physics to provide effective explanations for complex neural network systems and the counterintuitive phenomena they exhibit.</p>
+                    <p>This blog documents my exploration of neural network architectures, paper reviews, and insights from reading cutting-edge research in the field. Here you'll find:</p>
+                    <ul>
+                        <li><strong>Model Architecture:</strong> Detailed mathematical derivations and re-implementation details of model architectures.</li>
+                        <li><strong>Paper Reading:</strong> Summaries and structural analysis of papers in RL, ICL, and theoretical deep learning.</li>
+                        <li><strong>Research Log:</strong> Behind-the-scenes thoughts, debugging diaries, and experimental observations.</li>
+                    </ul>
+                    <h2>Contact</h2>
+                    <p>Feel free to reach out via email or connect on GitHub. I'm always interested in discussing research ideas and collaborations.</p>
+                    <a href="index.html" class="back-link">← Back to Home</a>
+                `;
+            }
+        }
+        
+        // Load when page is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadAboutMe);
+        } else {
+            loadAboutMe();
+        }
+    </script>
 
     <!-- Footer -->
     <footer class="footer">
